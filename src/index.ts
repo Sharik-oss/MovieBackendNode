@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { Movie } from "./movie.entity";
-import cors  from 'cors';
+import cors from 'cors';
 
 
 dotenv.config();
@@ -20,25 +20,28 @@ export const myDataSource = new DataSource({
 });
 
 myDataSource
-.initialize()
-.then(() => {
+  .initialize()
+  .then(() => {
     console.log("Data Source has been initialized!");
-})
-.catch((err) => {
+  })
+  .catch((err) => {
     console.error("Error during Data Source initialization:", err);
-});
+  });
 
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
 app.use(
-    cors({
-        origin: '*',
-        credentials: true,
-        methods: ["GET","POST", "PUT", "DELETE"],
-        allowedHeaders: "*"
-    })
+  cors({
+    origin: '*',
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: "*"
+  })
 )
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/movie", async (req: Request, res: Response) => {
   try {
@@ -49,6 +52,14 @@ app.get("/movie", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+app.post('/movie/add', (req, res) => {
+
+  console.log('Received data:', req.body);
+  res.status(200).send('Data received successfully!');
+  myDataSource.getRepository(Movie).save(req.body)
+})
 
 
 app.listen(port, () => {

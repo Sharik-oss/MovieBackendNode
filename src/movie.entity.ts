@@ -9,10 +9,10 @@ export class Movie{
     description!: string;
 
     @Column()
-    movie_geo!: string;
+    active!: boolean;
     
     @Column()
-    movie_name!: string;
+    movie_url!: string;
     
     @Column()
     name!: string;
