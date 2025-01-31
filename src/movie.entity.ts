@@ -19,4 +19,24 @@ export class Movie{
     
     @Column()
     poster!: string;
+
+    @Column({
+        nullable: true
+    })
+    year!: string;
+
+    @Column({
+        nullable: true
+    })
+    genre!: string;
+
+    @Column({
+        nullable: true
+    })
+    movieType!: string;
+
+    @Column({
+        nullable: true
+    })
+    resolution!: string;
 }
