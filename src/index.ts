@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { Movie } from "./movie.entity";
 import cors from "cors";
+import { Ad } from "./ad.entity";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ export const myDataSource = new DataSource({
   username: "postgres",
   password: "123456",
   database: "MovieWebsite",
-  entities: [Movie],
+  entities: [Movie, Ad],
   logging: false,
   synchronize: true,
 });
@@ -50,6 +51,21 @@ app.get("/movie", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+
+app.get("/ad", async (req: Request, res: Response) => {
+    try{
+        const ads = await myDataSource.getRepository(Ad).find();
+        res.status(200).json(ads);
+    }catch (error){
+        console.log("Error fetching ads", error);
+        res.status(500).json({error: "Internal server error"})
+    }
+})
+
+
+
 
 app.get("/movie/:id", async (req: Request, res: Response) => {
   try {
