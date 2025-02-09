@@ -54,15 +54,6 @@ app.get("/movie", async (req: Request, res: Response) => {
 
 
 
-app.get("/ad", async (req: Request, res: Response) => {
-    try{
-        const ads = await myDataSource.getRepository(Ad).find();
-        res.status(200).json(ads);
-    }catch (error){
-        console.log("Error fetching ads", error);
-        res.status(500).json({error: "Internal server error"})
-    }
-})
 
 
 
@@ -73,7 +64,7 @@ app.get("/movie/:id", async (req: Request, res: Response) => {
     const movie = await myDataSource.getRepository(Movie).findOneBy({
       id: movieId,
     });
-
+    
     res.send(movie);
   } catch (error) {
     console.error("Error fetching movies:", error);
@@ -84,20 +75,20 @@ app.get("/movie/:id", async (req: Request, res: Response) => {
 app.post("/movie/add", async (req: Request, res: Response) => {
   try {
     console.log("Received data:", req.body);
-
+    
     // Ensure the genre is stored as a JSON string
     const newMovie = myDataSource.getRepository(Movie).create({
       ...req.body,
       genre: Array.isArray(req.body.genre)
-        ? req.body.genre.join(", ")
-        : req.body.genre,
+      ? req.body.genre.join(", ")
+      : req.body.genre,
     });
-
+    
     const savedMovie = await myDataSource.getRepository(Movie).save(newMovie);
-
+    
     res
-      .status(201)
-      .json({ message: "Movie added successfully!", movie: savedMovie });
+    .status(201)
+    .json({ message: "Movie added successfully!", movie: savedMovie });
   } catch (error) {
     console.error("Error saving movie:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -121,6 +112,52 @@ app.patch("/movie/update/:id", async (req: Request, res: Response) => {
     res.status(400).json({ error: "Internal server error" });
   }
 });
+
+
+app.get("/ad", async (req: Request, res: Response) => {
+    try{
+        const ads = await myDataSource.getRepository(Ad).find();
+        res.status(200).json(ads);
+    }catch (error){
+        console.log("Error fetching ads", error);
+        res.status(500).json({error: "Internal server error"})
+    }
+})
+
+app.post("/ad/add", async (req: Request, res: Response)=> {
+  try {
+    console.log("Received data:", req.body);
+    
+    // Ensure the genre is stored as a JSON string
+    const newMovie = myDataSource.getRepository(Ad).create({
+      ...req.body,
+    });
+    
+    const savedMovie = await myDataSource.getRepository(Ad).save(newMovie);
+    
+    res
+    .status(201)
+    .json({ message: "Movie added successfully!", ad: Ad });
+  } catch (error) {
+    console.error("Error saving movie:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+
+app.delete("/delete/ad/:id", async (req: Request, res: Response) => {
+  try {
+    const adId = req.params.id; // Corrected from req.params.adId
+    await myDataSource.getRepository(Ad).delete(adId);
+    res.status(200).json({ message: "Ad deleted successfully!" });
+  } catch (error) {
+    console.error("Error deleting ad:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

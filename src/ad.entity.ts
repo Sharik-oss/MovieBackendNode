@@ -25,4 +25,22 @@ export class Ad{
     @Column()
     active!: boolean;
 
+
+    @Column()
+    redirectUrl!: String;
+
+
+    @Column({
+        nullable: true
+    })
+    mobileUrl!: String;
+
+
+    @Column(
+        {
+            nullable: true
+        }
+    )
+    leftOrRight!: String;
+
 }
