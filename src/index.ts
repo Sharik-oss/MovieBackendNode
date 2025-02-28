@@ -5,6 +5,7 @@ import { Movie } from "./movie.entity";
 import cors from "cors";
 import { Ad } from "./ad.entity";
 
+
 dotenv.config();
 
 export const myDataSource = new DataSource({
@@ -155,8 +156,6 @@ app.delete("/delete/ad/:id", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
 
 
 app.listen(port, () => {
